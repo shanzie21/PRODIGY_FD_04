@@ -1,0 +1,56 @@
+{
+  "users": [
+    {
+      "id": "aetherai",
+      "username": "aetherai",
+      "passwordHash": "AI_BOT_NO_PASSWORD",
+      "failedAttempts": 0,
+      "lockoutUntil": null,
+      "isBot": true
+    },
+    {
+      "id": "dc6b4cf3-8af3-4cd5-aad5-567fd0187e21",
+      "username": "SHANZIE",
+      "passwordHash": "$2a$10$2O4hcKcTWTGCV5G.AJuMe.r8q1Nv7G9GXEFgbnLQaAxGLrouFyJsW",
+      "failedAttempts": 0,
+      "lockoutUntil": null,
+      "isBot": false
+    }
+  ],
+  "channels": [
+    {
+      "id": "general",
+      "name": "general",
+      "type": "channel",
+      "members": []
+    },
+    {
+      "id": "announcements",
+      "name": "announcements",
+      "type": "channel",
+      "members": []
+    }
+  ],
+  "messages": [
+    {
+      "id": "welcome-msg",
+      "channelId": "general",
+      "sender": {
+        "id": "aetherai",
+        "username": "aetherai"
+      },
+      "content": "Welcome to Aether Chat! 🚀 Try talking to me here by typing my name, or click the + next to Direct Messages to start a private chat with me. Feel free to explore settings to customize your theme!",
+      "timestamp": 1781767853377
+    }
+  ],
+  "sessions": [
+    {
+      "token": "b78235199de70da553f72991e8e0efca4d28fa004023c7ebb36f59d60f9ed60c",
+      "userId": "dc6b4cf3-8af3-4cd5-aad5-567fd0187e21",
+      "username": "SHANZIE",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
+      "ip": "::1",
+      "createdAt": 1781768109790
+    }
+  ]
+}

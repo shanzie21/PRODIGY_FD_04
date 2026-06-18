@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aether Chat — Premium Real-Time Workspace</title>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons for clean premium look -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-midnight">
+  
+  <!-- BACKGROUND DECORATIONS -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- AUTHENTICATION CONTAINER -->
+  <div id="auth-container" class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">
+          <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+          <span>AETHER CHAT</span>
+        </div>
+        <p class="auth-subtitle">Welcome back. Enter your credentials to access the workspace.</p>
+      </div>
+
+      <!-- Errors/Alerts container -->
+      <div id="auth-alert" class="alert hidden"></div>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input type="text" id="login-username" placeholder="e.g. shanzie" required autocomplete="username">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>Sign In</span>
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </button>
+      </form>
+
+      <!-- Register Form (Hidden by default) -->
+      <form id="register-form" class="hidden">
+        <div class="form-group">
+          <label for="register-username">Username</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input type="text" id="register-username" placeholder="Min 3 characters" required autocomplete="username">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="register-password" placeholder="Min 6 characters" required autocomplete="new-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-accent btn-block">
+          <span>Create Account</span>
+          <i class="fa-solid fa-user-plus"></i>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p id="auth-toggle-text">Don't have an account? <a href="#" id="toggle-auth-btn">Sign Up</a></p>
+        <div class="security-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Account locks automatically after 8 failed attempts</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER (Hidden until authenticated) -->
+  <div id="app-container" class="app-layout hidden">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <!-- Sidebar Header -->
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+          <span>Aether Chat</span>
+        </div>
+      </div>
+
+      <!-- Channels & DM Lists -->
+      <div class="sidebar-scrollable">
+        <!-- Group Channels Section -->
+        <div class="sidebar-section">
+          <div class="section-header">
+            <span>Group Channels</span>
+            <div class="section-actions">
+              <button title="Browse all Channels" id="btn-browse-channels"><i class="fa-solid fa-compass"></i></button>
+              <button title="Create Channel" id="btn-add-channel"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <div id="channels-list" class="list-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Direct Messages Section -->
+        <div class="sidebar-section">
+          <div class="section-header">
+            <span>Direct Messages</span>
+            <button title="Start Direct Message" id="btn-add-dm"><i class="fa-solid fa-plus"></i></button>
+          </div>
+          <div id="dms-list" class="list-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer (Profile / Settings) -->
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar-wrapper">
+            <span class="user-avatar" id="current-user-avatar">?</span>
+            <span class="status-indicator online"></span>
+          </div>
+          <div class="user-details">
+            <span class="username" id="current-username">Guest</span>
+            <span class="user-status">Online</span>
+          </div>
+        </div>
+        <button id="btn-settings" class="settings-btn" title="Settings & Appearance">
+          <i class="fa-solid fa-cog"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CHAT CONTENT PANEL -->
+    <main class="chat-panel">
+      <!-- Welcome Screen (Default before selecting channel) -->
+      <div id="chat-welcome" class="welcome-screen">
+        <div class="welcome-content">
+          <div class="welcome-icon-glow">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <h1>Welcome to Aether Chat</h1>
+          <p>Select a channel or direct message from the sidebar to start collaborating, or chat directly with our helpful Aether AI bot.</p>
+          <div class="quick-links">
+            <button class="btn btn-secondary" id="welcome-btn-general"><i class="fa-solid fa-hashtag"></i> Join #general</button>
+            <button class="btn btn-secondary" id="welcome-btn-ai"><i class="fa-solid fa-robot"></i> Chat with Aether AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Chat Window -->
+      <div id="chat-window" class="chat-window hidden">
+        <!-- Header -->
+        <header class="chat-header">
+          <div class="chat-title-info">
+            <span class="chat-icon-indicator" id="chat-header-icon"><i class="fa-solid fa-hashtag"></i></span>
+            <div class="chat-meta">
+              <h2 id="chat-header-title">general</h2>
+              <span id="chat-header-desc" class="chat-desc">Select a topic or converse freely</span>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            <!-- Optional buttons -->
+          </div>
+        </header>
+
+        <!-- Message Feed -->
+        <div class="message-feed" id="message-feed">
+          <!-- Messages inserted dynamically -->
+        </div>
+
+        <!-- Chat Input Footer -->
+        <footer class="chat-input-footer">
+          <!-- Typing Indicators Area -->
+          <div id="typing-indicators" class="typing-container">
+            <!-- e.g. "Aether AI is typing..." -->
+          </div>
+
+          <form id="chat-form" class="chat-input-form">
+            <div class="input-box-wrapper">
+              <input type="text" id="chat-input" placeholder="Type a message... (tag @aetherai for responses)" autocomplete="off">
+              <div class="input-actions">
+                <button type="button" class="action-btn" id="btn-emoji-helper" title="Quick Emoji"><i class="fa-regular fa-face-smile"></i></button>
+                <button type="submit" class="send-btn" id="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </form>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- Settings Modal (Appearance, Sessions, Security) -->
+  <div id="modal-settings" class="modal-overlay hidden">
+    <div class="modal-box modal-large">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-cog"></i> Settings & Control Panel</h3>
+        <button class="close-modal-btn"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="modal-body settings-layout">
+        <!-- Settings Nav -->
+        <nav class="settings-nav">
+          <button class="settings-tab-btn active" data-tab="tab-appearance">
+            <i class="fa-solid fa-palette"></i> Appearance
+          </button>
+          <button class="settings-tab-btn" data-tab="tab-sessions">
+            <i class="fa-solid fa-desktop"></i> Active Sessions
+          </button>
+          <button class="settings-tab-btn" data-tab="tab-security">
+            <i class="fa-solid fa-shield-halved"></i> Security & Lockouts
+          </button>
+        </nav>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+          <!-- Tab 1: Appearance -->
+          <div id="tab-appearance" class="settings-pane active">
+            <h4>Application Theme</h4>
+            <p class="pane-description">Choose a curated theme to customize your workspace aesthetics.</p>
+            
+            <div class="theme-grid">
+              <div class="theme-option" data-theme="midnight">
+                <div class="theme-preview midnight-preview">
+                  <div class="preview-bar"></div>
+                  <div class="preview-bubble"></div>
+                </div>
+                <span>Midnight</span>
+              </div>
+              
+              <div class="theme-option" data-theme="cyber">
+                <div class="theme-preview cyber-preview">
+                  <div class="preview-bar"></div>
+                  <div class="preview-bubble"></div>
+                </div>
+                <span>Cyber Neon</span>
+              </div>
+
+              <div class="theme-option" data-theme="royal">
+                <div class="theme-preview royal-preview">
+                  <div class="preview-bar"></div>
+                  <div class="preview-bubble"></div>
+                </div>
+                <span>Royal Purple</span>
+              </div>
+
+              <div class="theme-option" data-theme="light">
+                <div class="theme-preview light-preview">
+                  <div class="preview-bar"></div>
+                  <div class="preview-bubble"></div>
+                </div>
+                <span>Light Professional</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Sessions -->
+          <div id="tab-sessions" class="settings-pane">
+            <h4>Active Devices & Sessions</h4>
+            <p class="pane-description">Manage all devices currently logged into your account. You can revoke any other session here.</p>
+            <div class="session-list-wrapper">
+              <table class="session-table">
+                <thead>
+                  <tr>
+                    <th>Device / User Agent</th>
+                    <th>IP Address</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="sessions-table-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 3: Security -->
+          <div id="tab-security" class="settings-pane">
+            <h4>Security Policies</h4>
+            <div class="security-info-card">
+              <div class="security-badge-large">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div class="security-details-text">
+                <h5>Account Lockout Protocol</h5>
+                <p>To protect your account against unauthorized brute-force attempts, Aether Chat implements strict security lockouts:</p>
+                <ul>
+                  <li><strong>Failed Attempts Allowed:</strong> 8 consecutive incorrect logins.</li>
+                  <li><strong>Lockout Duration:</strong> 15 minutes for the first lockout tier.</li>
+                  <li><strong>Active Logging:</strong> Every session contains the connecting User Agent and IP address. Revoking a session immediately drops their WebSocket connections and forces a logout.</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="account-actions">
+              <button id="btn-logout" class="btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out of Aether Chat</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Channel Modal -->
+  <div id="modal-create-channel" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create New Channel</h3>
+        <button class="close-modal-btn"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <form id="create-channel-form" class="modal-body">
+        <div class="form-group">
+          <label for="new-channel-name">Channel Name</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-hashtag input-icon"></i>
+            <input type="text" id="new-channel-name" placeholder="e.g. random-chatter" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Channel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Browse/Compass Modal -->
+  <div id="modal-browse-channels" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Explore Public Channels</h3>
+        <button class="close-modal-btn"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div id="browse-channels-list" class="browse-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start DM Modal -->
+  <div id="modal-create-dm" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Start Direct Message</h3>
+        <button class="close-modal-btn"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Select a user to chat with:</label>
+          <div id="dm-users-list" class="browse-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS App Logic -->
+  <script src="js/app.js"></script>
+</body>
+</html>
